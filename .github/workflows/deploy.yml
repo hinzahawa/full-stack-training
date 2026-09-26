@@ -2,9 +2,8 @@ name: Build and Deploy to Oracle Cloud
 
 on:
   push:
-    branches: ["main"]
     tags:
-      - 'v*.*.*' # ทำงานเฉพาะเวลา Push ลง branch main หรือติด Tag เช่น v1.0.0
+      - 'v*.*.*' # ทำงานเฉพาะเวลาดัน Tag เวอร์ชันเท่านั้น เช่น v1.0.0, v1.0.1
 
 env:
   REGISTRY: ghcr.io
@@ -87,12 +86,13 @@ jobs:
             git fetch --tags
             git checkout ${{ github.ref_name }}
             
-            # Login เข้า GHCR บน Server
             echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
             
-            # สั่ง Pull Image ล่าสุดมาแลัวรัน
-            docker compose -f docker-compose.prod.yml pull
+            # Pull ทีละตัวอย่างเป็นลำดับเพื่อไม่ให้ Disk/CPU โหลดหนักเกินไป
+            docker pull ghcr.io/hinzahawa/full-stack-training/backend:latest || true
+            docker pull ghcr.io/hinzahawa/full-stack-training/frontend:latest || true
+            
+            # รันระบบขึ้นมา
             docker compose -f docker-compose.prod.yml up -d --remove-orphans
             
-            # ล้าง Cache Image เก่าทิ้ง
             docker image prune -f

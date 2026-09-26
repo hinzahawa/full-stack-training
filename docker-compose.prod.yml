@@ -5,6 +5,7 @@ services:
     image: mysql:8.0
     container_name: app_mysql
     restart: always
+    command: --innodb-buffer-pool-size=64M --max-connections=30
     environment:
       MYSQL_ROOT_PASSWORD: rootpassword
       MYSQL_DATABASE: myapp_db
