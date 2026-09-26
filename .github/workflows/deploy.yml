@@ -3,9 +3,10 @@ name: Build and Deploy to Oracle Cloud
 on:
   push:
     branches: ["main"]
-    pull_request: ["main"]
     tags:
       - 'v*.*.*' # ทำงานเฉพาะเวลาดัน Tag เช่น v1.0.0
+  pull_request:
+      branches: ["main"]
 
 env:
   REGISTRY: ghcr.io
@@ -35,6 +36,9 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: ${{ env.IMAGE_BACKEND }}
+          tags: |
+            type=ref,event=tag
+            type=raw,value=latest
 
       - name: Build and Push Backend
         uses: docker/build-push-action@v5
@@ -48,6 +52,9 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: ${{ env.IMAGE_FRONTEND }}
+          tags: |
+            type=ref,event=tag
+            type=raw,value=latest
 
       - name: Build and Push Frontend
         uses: docker/build-push-action@v5

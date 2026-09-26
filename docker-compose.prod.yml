@@ -32,7 +32,7 @@ services:
       - db
 
   frontend:
-    image: ghcr.io/hinzahawa/full-stack-training/frontend:latest
+    image: ghcr.io/hinzahawa/full-stack-training/frontend:latest 
     container_name: app_frontend
     restart: always
     ports:
