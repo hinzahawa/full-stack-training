@@ -4,14 +4,10 @@ on:
   push:
     branches: ["main"]
     tags:
-      - 'v*.*.*' # ทำงานเฉพาะเวลาดัน Tag เช่น v1.0.0
-  pull_request:
-      branches: ["main"]
+      - 'v*.*.*' # ทำงานเฉพาะเวลา Push ลง branch main หรือติด Tag เช่น v1.0.0
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_BACKEND: ghcr.io/${{ github.repository }}/backend
-  IMAGE_FRONTEND: ghcr.io/${{ github.repository }}/frontend
 
 jobs:
   build-and-push:
@@ -30,6 +26,14 @@ jobs:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+
+      # แปลงชื่อ Repository เป็นตัวพิมพ์เล็กทั้งหมด ป้องกัน GHCR Error
+      - name: Lowercase Repository Name
+        run: |
+          echo "IMAGE_BACKEND=ghcr.io/${github_repository_lower}/backend" >> $GITHUB_ENV
+          echo "IMAGE_FRONTEND=ghcr.io/${github_repository_lower}/frontend" >> $GITHUB_ENV
+        env:
+          github_repository_lower: ${{ github.repository }}
 
       - name: Extract metadata for Backend
         id: meta-backend
@@ -75,7 +79,7 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
           script: |
-            # Clone or Pull latest repository config
+            # Clone หรือ Pull โค้ดล่าสุด
             if [ ! -d "app" ]; then
               git clone https://github.com/${{ github.repository }}.git app
             fi
@@ -83,12 +87,12 @@ jobs:
             git fetch --tags
             git checkout ${{ github.ref_name }}
             
-            # Login to GHCR on server
+            # Login เข้า GHCR บน Server
             echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
             
-            # Pull new images and restart services
+            # สั่ง Pull Image ล่าสุดมาแลัวรัน
             docker compose -f docker-compose.prod.yml pull
             docker compose -f docker-compose.prod.yml up -d --remove-orphans
             
-            # Clean unused image caches
+            # ล้าง Cache Image เก่าทิ้ง
             docker image prune -f
