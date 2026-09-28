@@ -47,7 +47,7 @@ services:
     depends_on:
       - backend
 
-nginx:
+  nginx:
     image: nginx:alpine
     container_name: app_nginx
     restart: always
@@ -62,6 +62,6 @@ nginx:
       resources:
         limits:
           memory: 50M
-          
+
 volumes:
   mysql_data:
