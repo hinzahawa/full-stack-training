@@ -27,15 +27,15 @@ services:
     environment:
       DB_HOST: db
       DB_PORT: "3306"
-      DB_USER: ${MYSQL_USER}       
-      DB_PASSWORD: ${MYSQL_PASSWORD}  
-      DB_NAME: ${MYSQL_DATABASE}    
+      DB_USER: ${MYSQL_USER}
+      DB_PASSWORD: ${MYSQL_PASSWORD}
+      DB_NAME: ${MYSQL_DATABASE}
       PORT: "8080"
     depends_on:
       - db
 
   frontend:
-    image: ghcr.io/hinzahawa/full-stack-training/frontend:latest 
+    image: ghcr.io/hinzahawa/full-stack-training/frontend:latest
     container_name: app_frontend
     restart: always
     deploy:
@@ -51,8 +51,10 @@ services:
     restart: always
     ports:
       - "80:80"
+      - "443:443" # <--- 1. เพิ่มพอร์ต 443 สำหรับ HTTPS
     volumes:
       - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - /etc/letsencrypt:/etc/letsencrypt:ro # <--- 2. Mount โฟลเดอร์ใบรับรอง SSL
     depends_on:
       - frontend
       - backend
