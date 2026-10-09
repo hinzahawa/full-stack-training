@@ -1,0 +1,10 @@
+<svg width="900" height="1125" viewBox="0 0 900 1125" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="900" height="1125" fill="#25312B"/>
+  <rect x="56" y="56" width="788" height="1013" rx="28" fill="#1B2621"/>
+  <circle cx="450" cy="372" r="168" fill="#9ED8C2"/>
+  <path d="M198 945C228 758 325 634 450 634C575 634 672 758 702 945H198Z" fill="#E0A94F"/>
+  <circle cx="386" cy="352" r="22" fill="#18201C"/>
+  <circle cx="514" cy="352" r="22" fill="#18201C"/>
+  <path d="M377 446C412 480 488 480 523 446" stroke="#18201C" stroke-width="20" stroke-linecap="round"/>
+  <text x="450" y="1044" text-anchor="middle" fill="#F7F8F5" font-family="Arial, Helvetica, sans-serif" font-size="86" font-weight="700">MH</text>
+</svg>
