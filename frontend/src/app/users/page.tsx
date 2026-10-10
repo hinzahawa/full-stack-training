@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 // app/page.tsx
 interface User {
   id: number;
@@ -15,17 +17,20 @@ async function getUsers(): Promise<User[]> {
 }
 
 export default async function UsersPage() {
-  const users = await getUsers();
+  const users: User[] = await getUsers();
 
   return (
     <main className="p-8 max-w-4xl mx-auto">
+      <button className="bg-white"><Link className="font-semibold text-lg text-black" href={"/users/create"}>Create User</Link></button>
       <h1 className="text-3xl font-bold mb-6">รายชื่อผู้ใช้งาน (Next.js SSR)</h1>
       <ul className="space-y-4">
         {users.map((user) => (
-          <li key={user.id} className="p-4 border rounded-lg shadow-sm bg-white">
-            <h2 className="font-semibold text-lg text-black">{user.name}</h2>
-            <p className="text-gray-600">{user.email}</p>
-          </li>
+          <Link key={user.id} className="font-semibold text-lg text-black" href={"/users/" + user.id}>
+            <li key={user.id} className="p-4 border rounded-lg shadow-sm bg-white">
+              <h2 key={user.id} className="font-semibold text-lg text-black">{user.name}</h2>
+              <p className="text-gray-600">{user.email}</p>
+            </li>
+          </Link>
         ))}
       </ul>
     </main>
